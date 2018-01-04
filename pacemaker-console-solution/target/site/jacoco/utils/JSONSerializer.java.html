@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JSONSerializer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pacemaker-console-solution</a> &gt; <a href="index.source.html" class="el_package">utils</a> &gt; <span class="el_source">JSONSerializer.java</span></div><h1>JSONSerializer.java</h1><pre class="source lang-java linenums">package utils;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Stack;
+
+public class JSONSerializer implements Serializer {
+
+<span class="fc" id="L16">  private Stack stack = new Stack();</span>
+  private File file;
+
+<span class="fc" id="L19">  public JSONSerializer(File file) {</span>
+<span class="fc" id="L20">    this.file = file;</span>
+<span class="fc" id="L21">  }</span>
+
+  public void push(Object o) {
+<span class="fc" id="L24">    stack.push(o);</span>
+<span class="fc" id="L25">  }</span>
+
+  public Object pop() {
+<span class="fc" id="L28">    return stack.pop();</span>
+  }
+
+  @SuppressWarnings(&quot;unchecked&quot;)
+  public void read() throws Exception {
+<span class="fc" id="L33">    ObjectInputStream is = null;</span>
+
+    try {
+<span class="fc" id="L36">      XStream xstream = new XStream(new JettisonMappedXmlDriver());</span>
+<span class="fc" id="L37">      is = xstream.createObjectInputStream(new FileReader(file));</span>
+<span class="fc" id="L38">      stack = (Stack) is.readObject();</span>
+    } finally {
+<span class="pc bpc" id="L40" title="3 of 4 branches missed.">      if (is != null) {</span>
+<span class="pc" id="L41">        is.close();</span>
+      }
+    }
+<span class="fc" id="L44">  }</span>
+
+  public void write() throws Exception {
+<span class="fc" id="L47">    ObjectOutputStream os = null;</span>
+
+    try {
+<span class="fc" id="L50">      XStream xstream = new XStream(new JettisonMappedXmlDriver());</span>
+<span class="fc" id="L51">      os = xstream.createObjectOutputStream(new FileWriter(file));</span>
+<span class="fc" id="L52">      os.writeObject(stack);</span>
+    } finally {
+<span class="pc bpc" id="L54" title="3 of 4 branches missed.">      if (os != null) {</span>
+<span class="pc" id="L55">        os.close();</span>
+      }
+    }
+<span class="fc" id="L58">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

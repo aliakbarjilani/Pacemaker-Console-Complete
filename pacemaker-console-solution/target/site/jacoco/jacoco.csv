@@ -1,0 +1,9 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+pacemaker-console-solution,models,Location,27,51,3,3,4,13,5,3,2,3
+pacemaker-console-solution,models,User,56,86,5,7,8,22,11,4,6,3
+pacemaker-console-solution,models,Activity,63,103,7,7,9,25,14,3,7,3
+pacemaker-console-solution,utils,Console,27,0,0,0,11,0,6,0,6,0
+pacemaker-console-solution,utils,JSONSerializer,14,76,6,2,0,21,4,5,0,5
+pacemaker-console-solution,utils,XMLSerializer,14,76,6,2,0,21,4,5,0,5
+pacemaker-console-solution,utils,TimeFormatters,3,38,0,0,1,12,1,5,1,5
+pacemaker-console-solution,controllers,PacemakerAPI,50,288,11,19,10,54,14,25,4,16

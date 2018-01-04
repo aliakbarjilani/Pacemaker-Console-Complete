@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Activity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pacemaker-console-solution</a> &gt; <a href="index.source.html" class="el_package">models</a> &gt; <span class="el_source">Activity.java</span></div><h1>Activity.java</h1><pre class="source lang-java linenums">package models;
+
+import static com.google.common.base.MoreObjects.toStringHelper;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import com.google.common.base.Objects;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+
+import static utils.TimeFormatters.parseDateTime;
+import static utils.TimeFormatters.parseDuration;
+
+public class Activity implements Serializable {
+
+  public String id;
+  public String type;
+  public String location;
+  public double distance;
+  public DateTime starttime;
+  public Duration duration;
+<span class="pc" id="L25">  public List&lt;Location&gt; route = new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L27">  public Activity() {</span>
+<span class="nc" id="L28">  }</span>
+
+<span class="fc" id="L30">  public Activity(String type, String location, double distance, String start, String duration) {</span>
+<span class="fc" id="L31">    this.id = UUID.randomUUID().toString();</span>
+<span class="fc" id="L32">    this.type = type;</span>
+<span class="fc" id="L33">    this.location = location;</span>
+<span class="fc" id="L34">    this.distance = distance;</span>
+<span class="fc" id="L35">    this.starttime = parseDateTime(start);</span>
+<span class="fc" id="L36">    this.duration = parseDuration(duration);</span>
+<span class="fc" id="L37">  }</span>
+
+  public String getId() {
+<span class="nc" id="L40">    return id;</span>
+  }
+
+  public String getType() {
+<span class="nc" id="L44">    return type;</span>
+  }
+
+  public String getLocation() {
+<span class="nc" id="L48">    return location;</span>
+  }
+
+  public String getDistance() {
+<span class="nc" id="L52">    return Double.toString(distance);</span>
+  }
+
+  public String getRoute() {
+<span class="nc" id="L56">    return route.toString();</span>
+  }
+
+  @Override
+  public boolean equals(final Object obj) {
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">    if (obj instanceof Activity) {</span>
+<span class="fc" id="L62">      final Activity other = (Activity) obj;</span>
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">      return Objects.equal(type, other.type)</span>
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">          &amp;&amp; Objects.equal(location, other.location)</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">          &amp;&amp; Objects.equal(distance, other.distance)</span>
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">          &amp;&amp; Objects.equal(starttime, other.starttime)</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">          &amp;&amp; Objects.equal(duration, other.duration)</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">          &amp;&amp; Objects.equal(route, other.route);</span>
+    } else {
+<span class="nc" id="L70">      return false;</span>
+    }
+  }
+
+  @Override
+  public String toString() {
+<span class="fc" id="L76">    return toStringHelper(this).addValue(id)</span>
+<span class="fc" id="L77">        .addValue(type)</span>
+<span class="fc" id="L78">        .addValue(location)</span>
+<span class="fc" id="L79">        .addValue(distance)</span>
+<span class="fc" id="L80">        .addValue(parseDateTime(starttime))</span>
+<span class="fc" id="L81">        .addValue(parseDuration(duration))  </span>
+<span class="fc" id="L82">        .addValue(route)</span>
+<span class="fc" id="L83">        .toString();</span>
+  }
+
+  @Override
+  public int hashCode() {
+<span class="nc" id="L88">    return Objects.hashCode(this.id, this.type, this.location, this.distance, this.starttime, this.duration);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

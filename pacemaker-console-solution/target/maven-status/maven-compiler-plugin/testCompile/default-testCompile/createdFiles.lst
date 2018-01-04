@@ -1,0 +1,3 @@
+models\Fixtures.class
+models\UserTest.class
+controllers\PersistenceTest.class

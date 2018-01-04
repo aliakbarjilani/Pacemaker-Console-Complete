@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PacemakerAPI.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pacemaker-console-solution</a> &gt; <a href="index.source.html" class="el_package">controllers</a> &gt; <span class="el_source">PacemakerAPI.java</span></div><h1>PacemakerAPI.java</h1><pre class="source lang-java linenums">package controllers;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import com.google.common.base.Optional;
+import models.Activity;
+import models.Location;
+import models.User;
+import utils.Serializer;
+
+import org.joda.time.DateTimeComparator;
+
+public class PacemakerAPI {
+
+<span class="pc" id="L18">  private Map&lt;String, User&gt; emailIndex = new HashMap&lt;&gt;();</span>
+<span class="pc" id="L19">  private Map&lt;String, User&gt; userIndex = new HashMap&lt;&gt;();</span>
+<span class="pc" id="L20">  private Map&lt;String, Activity&gt; activitiesIndex = new HashMap&lt;&gt;();</span>
+
+  public Serializer serializer;
+
+<span class="nc" id="L24">  public PacemakerAPI() {}</span>
+
+<span class="fc" id="L26">  public PacemakerAPI(Serializer serializer) {</span>
+<span class="fc" id="L27">    this.serializer = serializer;</span>
+<span class="fc" id="L28">  }</span>
+  public Collection&lt;User&gt; getUsers() {
+<span class="fc" id="L30">    return userIndex.values();</span>
+  }
+
+  public void deleteUsers() {
+<span class="nc" id="L34">    userIndex.clear();</span>
+<span class="nc" id="L35">    emailIndex.clear();</span>
+<span class="nc" id="L36">  }</span>
+
+  public User createUser(String firstName, String lastName, String email, String password) {
+<span class="fc" id="L39">    User user = new User(firstName, lastName, email, password);</span>
+<span class="fc" id="L40">    emailIndex.put(email, user);</span>
+<span class="fc" id="L41">    userIndex.put(user.id, user);</span>
+<span class="fc" id="L42">    return user;</span>
+  }
+
+  public Activity createActivity(String id, String type, String location, double distance,
+      String starttime, String duration) {
+<span class="fc" id="L47">    Activity activity = null;</span>
+<span class="fc" id="L48">    Optional&lt;User&gt; user = Optional.fromNullable(userIndex.get(id));</span>
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">    if (user.isPresent()) {</span>
+<span class="fc" id="L50">      activity = new Activity(type, location, distance, starttime, duration);</span>
+<span class="fc" id="L51">      user.get().activities.put(activity.id, activity);</span>
+<span class="fc" id="L52">      activitiesIndex.put(activity.id, activity);</span>
+    }
+<span class="fc" id="L54">    return activity;</span>
+  }
+
+  public Activity getActivity(String id) {
+<span class="fc" id="L58">    return activitiesIndex.get(id);</span>
+  }
+
+  public Collection&lt;Activity&gt; getActivities(String id) {
+<span class="nc" id="L62">    Collection&lt;Activity&gt; activities = null;</span>
+<span class="nc" id="L63">    Optional&lt;User&gt; user = Optional.fromNullable(userIndex.get(id));</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">    if (user.isPresent()) {</span>
+<span class="nc" id="L65">      activities = user.get().activities.values();</span>
+    }
+<span class="nc" id="L67">    return activities;</span>
+  }
+
+  public List&lt;Activity&gt; listActivities(String userId, String sortBy) {
+<span class="fc" id="L71">    List&lt;Activity&gt; activities = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L72">    activities.addAll(userIndex.get(userId).activities.values());</span>
+<span class="pc bpc" id="L73" title="7 of 22 branches missed.">    switch (sortBy) {</span>
+      case &quot;type&quot;:
+<span class="fc" id="L75">        activities.sort((a1, a2) -&gt; a1.type.compareTo(a2.type));</span>
+<span class="fc" id="L76">        break;</span>
+      case &quot;location&quot;:
+<span class="fc" id="L78">        activities.sort((a1, a2) -&gt; a1.location.compareTo(a2.location));</span>
+<span class="fc" id="L79">        break;</span>
+      case &quot;distance&quot;:
+<span class="fc" id="L81">        activities.sort((a1, a2) -&gt; Double.compare(a1.distance, a2.distance));</span>
+<span class="fc" id="L82">        break;</span>
+      case &quot;date&quot;:
+<span class="fc" id="L84">        activities</span>
+<span class="fc" id="L85">            .sort((a1, a2) -&gt; DateTimeComparator.getInstance().compare(a1.starttime, a2.starttime));</span>
+<span class="fc" id="L86">        break;</span>
+      case &quot;duration&quot;:
+<span class="fc" id="L88">        activities</span>
+<span class="fc" id="L89">            .sort((a1, a2) -&gt; {</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">              if (a1.duration.getStandardSeconds() &gt; a2.duration.getStandardSeconds()) {</span>
+<span class="fc" id="L91">                return 1;</span>
+              } else {
+<span class="fc" id="L93">                return -1;</span>
+              }
+            });
+        break;
+    }
+<span class="fc" id="L98">    return activities;</span>
+  }
+
+  public void addLocation(String id, double latitude, double longitude) {
+<span class="fc" id="L102">    Optional&lt;Activity&gt; activity = Optional.fromNullable(activitiesIndex.get(id));</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">    if (activity.isPresent()) {</span>
+<span class="fc" id="L104">      activity.get().route.add(new Location(latitude, longitude));</span>
+    }
+<span class="fc" id="L106">  }</span>
+
+  public User getUserByEmail(String email) {
+<span class="fc" id="L109">    return emailIndex.get(email);</span>
+  }
+
+  public User getUser(String id) {
+<span class="nc" id="L113">    return userIndex.get(id);</span>
+  }
+
+  public User deleteUser(String id) {
+<span class="fc" id="L117">    User user = userIndex.remove(id);</span>
+<span class="fc" id="L118">    return emailIndex.remove(user.email);</span>
+  }
+  
+  @SuppressWarnings(&quot;unchecked&quot;)
+  public void load() throws Exception {
+<span class="fc" id="L123">    serializer.read();</span>
+<span class="fc" id="L124">    activitiesIndex = (Map&lt;String, Activity&gt;) serializer.pop();</span>
+<span class="fc" id="L125">    emailIndex = (Map&lt;String, User&gt;) serializer.pop();</span>
+<span class="fc" id="L126">    userIndex = (Map&lt;String, User&gt;) serializer.pop();</span>
+<span class="fc" id="L127">  }</span>
+
+  public void store() throws Exception {
+<span class="fc" id="L130">    serializer.push(userIndex);</span>
+<span class="fc" id="L131">    serializer.push(emailIndex);</span>
+<span class="fc" id="L132">    serializer.push(activitiesIndex);</span>
+<span class="fc" id="L133">    serializer.write();</span>
+<span class="fc" id="L134">  }</span>
+  
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
